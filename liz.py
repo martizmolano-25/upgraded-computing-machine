@@ -2,8 +2,29 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import sqlite3
 from datetime import datetime
+# ---------- LOGIN ----------
+def verificar_login():
+    username = entry_username.get()
+    Password = entry_password.get()
 
-# ---------- Base de Datos ----------
+    if usuario == "admin" and contraseña == "1234":
+        ventana_login.destroy()
+        iniciar_app()
+    else:
+        messagebox.showerror("Error", "Usuario o contraseña incorrectos")
+
+
+# ---------- INICIAR APP PRINCIPAL ----------
+def iniciar_app():
+    global root, conn, cursor
+    global label_tipo, label_desc, label_monto, boton_agregar
+    global entry_desc, entry_monto, tipo_var, menu_tipo
+    global tree, label_idioma
+
+    # ---------- Base de Datos ----------
+    conn = sqlite3.connect("finanzas.db")
+    cursor = conn.cursor()
+
 conn = sqlite3.connect("finanzas.db")
 cursor = conn.cursor()
 
@@ -137,11 +158,11 @@ tk.Button(frame_idioma, text="English", bg="white",
           command=lambda: cambiar_idioma("en")).pack(side="left", padx=5)
 
 # Frame formulario
-frame = tk.Frame(root, bg="#6b1b28")
+frame = tk.Frame(root, bg="#e90e32")
 frame.pack(pady=10)
 
 # Tipo
-label_tipo = tk.Label(frame, bg="#b3485a")
+label_tipo = tk.Label(frame, bg="#e90a2f")
 label_tipo.grid(row=0, column=0, padx=5, pady=5)
 
 tipo_var = tk.StringVar()
@@ -149,7 +170,7 @@ menu_tipo = tk.OptionMenu(frame, tipo_var, "")
 menu_tipo.grid(row=0, column=1, padx=5, pady=5)
 
 # Descripción
-label_desc = tk.Label(frame, bg="#c22e47")
+label_desc = tk.Label(frame, bg="#df0b2b")
 label_desc.grid(row=1, column=0, padx=5, pady=5)
 
 entry_desc = tk.Entry(frame)
@@ -174,6 +195,23 @@ tree.heading("Descripción", text="Descripción")
 tree.heading("Monto", text="Monto")
 tree.heading("Fecha", text="Fecha")
 tree.pack(fill="both", expand=True, padx=10, pady=10)
+# ---------- VENTANA LOGIN ----------
+ventana_login = tk.Tk()
+ventana_login.title("Login")
+ventana_login.geometry("300x200")
+ventana_login.config(bg="#f50c32")
+
+tk.Label(ventana_login, text="Username", bg="#e70a2f").pack(pady=5)
+entry_usuario = tk.Entry(ventana_login)
+entry_usuario.pack()
+
+tk.Label(ventana_login, text="Password", bg="#f00930").pack(pady=5)
+entry_contraseña = tk.Entry(ventana_login, show="*")
+entry_contraseña.pack()
+
+tk.Button(ventana_login, text="Login", command=verificar_login).pack(pady=15)
+
+ventana_login.mainloop()
 
 # Inicializar idioma
 cambiar_idioma("es")
